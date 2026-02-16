@@ -26,6 +26,7 @@ The application follows a layered architecture with clear separation of concerns
 - Mine count is capped at 35% of total cells.
 - Coordinates are entered as `<Row><Col>` (e.g., `A1`, `D4`).
 - Grid size must be at least 2.
+- No zero mine game, needs atleast 1 mine.
 
 ## Environment
 
@@ -33,10 +34,16 @@ The application follows a layered architecture with clear separation of concerns
 - **Build tool**: Maven 3.8+
 - **OS**: Windows, macOS, or Linux
 
-## Build & Run
+## Build
 
 ```bash
-mvn clean compile exec:java -Dexec.mainClass="com.jithu.minesweeper.Main"
+mvn clean compile
+```
+
+## Run
+
+```bash
+mvn -q exec:java
 ```
 
 ## Run Tests
@@ -50,15 +57,47 @@ mvn clean test
 ```
 src/
 ├── main/java/com/jithu/minesweeper/
-│   ├── config/         # Configuration & validation
-│   ├── domain/         # Core model (Board, Cell, Coordinate)
-│   ├── game/           # Game engine & reveal strategy
-│   ├── mines/          # Mine placement strategy
-│   ├── ui/             # Console I/O, rendering, game loop
-│   └── Main.java       # Entry point
+│   ├── Main.java                    # Entry point
+│   ├── config/
+│   │   ├── GameConfiguration.java
+│   │   ├── GameConfigurationValidator.java
+│   │   └── ValidationResult.java
+│   ├── domain/
+│   │   ├── Board.java
+│   │   ├── Cell.java
+│   │   ├── Coordinate.java
+│   │   └── GameStatus.java
+│   ├── game/
+│   │   ├── Game.java
+│   │   ├── RecursiveRevealStrategy.java
+│   │   ├── RevealResult.java
+│   │   └── RevealStrategy.java
+│   ├── mines/
+│   │   ├── FixedMinePlacer.java
+│   │   ├── MinePlacer.java
+│   │   └── RandomMinePlacer.java
+│   └── ui/
+│       ├── BoardRenderer.java
+│       ├── Console.java
+│       ├── CoordinateParser.java
+│       ├── GameRunner.java
+│       └── SystemConsole.java
 └── test/java/com/jithu/minesweeper/
-    ├── *Test.java      # Unit tests
-    ├── *E2ETest.java   # End-to-end tests
-    ├── FakeConsole.java
-    └── FixedMinePlacer.java
+    ├── GameRunnerE2ETest.java
+    ├── config/
+    │   ├── GameConfigurationTest.java
+    │   └── GameConfigurationValidatorTest.java
+    ├── domain/
+    │   ├── BoardTest.java
+    │   └── CellTest.java
+    ├── game/
+    │   ├── GameTest.java
+    │   └── RecursiveRevealStrategyTest.java
+    ├── mines/
+    │   ├── FixedMinePlacerTest.java
+    │   └── RandomMinePlacerTest.java
+    └── ui/
+        ├── BoardRendererTest.java
+        ├── CoordinateParserTest.java
+        └── FakeConsole.java
 ```
